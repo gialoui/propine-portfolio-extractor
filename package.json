@@ -1,0 +1,32 @@
+{
+  "name": "propine-portfolio-extractor-cli",
+  "version": "1.0.0",
+  "description": "This is a CLI application aims to compute the portfolio of crypto investor based on the input parameters",
+  "main": "index.ts",
+  "scripts": {
+    "build": "npx tsc && cd dist && node index.js",
+    "post_build": "",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gialoui/propine-portfolio-extractor.git"
+  },
+  "author": "khangndd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gialoui/propine-portfolio-extractor/issues"
+  },
+  "homepage": "https://github.com/gialoui/propine-portfolio-extractor#readme",
+  "dependencies": {
+    "commander": "^10.0.1",
+    "dotenv": "^8.6.0",
+    "figlet": "^1.6.0",
+    "snyk": "^1.1143.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.13",
+    "nodemon": "^2.0.22",
+    "typescript": "^5.0.4"
+  }
+}

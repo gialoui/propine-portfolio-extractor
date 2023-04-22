@@ -1,2 +1,11 @@
-# propine-portfolio-extractor
-This is a CLI application aims to compute the portfolie of crypto investor based on the input parameters
+# Propine Portfolio Details
+
+## Run this command one time when you first checkout the repository:
+```
+yarn
+```
+
+## Run this command when you want to re-compile the project:
+```
+yarn build
+```
