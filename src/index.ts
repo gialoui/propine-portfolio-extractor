@@ -29,29 +29,38 @@ if (opts.token || opts.date) {
   if (opts.token && opts.date) {
 
   } else if (opts.token) {
-    console.log(`token: ${opts.token}`);
+    let finalBalance;
+
+    processCsvFile(csvReadStream, (row: Transaction) => {
+      if (opts.token === row.token) {
+        if (finalBalance) {
+          finalBalance = calculateBalance(new Big(finalBalance), row.transaction_type, new Big(row.amount));
+        } else {
+          finalBalance = row.amount;
+        }
+      }
+    }, () => {
+      printPortfolio(opts.token, finalBalance);
+      console.timeEnd('Estimated time');
+    });
   } else if (opts.date) {
     console.log(`date: ${opts.date}`);
   }
 } else {
   let portfolios = new Map<string, Big>();
   
-  csvReadStream.on("data", (row: Transaction) => {
+  processCsvFile(csvReadStream, (row: Transaction) => {
     if (portfolios.has(row.token)) {
       portfolios.set(row.token, calculateBalance(portfolios.get(row.token), row.transaction_type, new Big(row.amount)));
     } else {
       portfolios.set(row.token, new Big(row.amount));
     }
-  })
-  .on('end', () => {
+  }, () => {
     for (let [key, value] of portfolios) {
-      console.log(`${key}: ${value.toPrecision(10)}`)
+      printPortfolio(key, value);
     }
 
     console.timeEnd('Estimated time');
-  })
-  .on('error', (error) => {
-    console.error(`Something went wrong: ${error}`)
   });
 }
 
@@ -61,4 +70,17 @@ function calculateBalance(currentBalance: Big, transactionType: string, amount: 
   } else if ('DEPOSIT' === transactionType) {
     return currentBalance.plus(amount);
   }
+}
+
+function processCsvFile(csvReadStream, handler: Function, endHandler: Function) {
+  csvReadStream.on("data", handler)
+  .on('end', endHandler)
+  .on('error', (error) => {
+    console.error(`Something went wrong: ${error}`)
+  });
+}
+
+function printPortfolio(token: string, balance: Big) {
+  // TODO: convert to USD
+  console.log(`${token}: ${balance.toPrecision(10)}`)
 }
