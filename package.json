@@ -4,7 +4,7 @@
   "description": "This is a CLI application aims to compute the portfolio of crypto investor based on the input parameters",
   "main": "index.ts",
   "scripts": {
-    "build": "npx tsc && cd dist && node index.js",
+    "build": "npx tsc",
     "post_build": "",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/gialoui/propine-portfolio-extractor#readme",
   "dependencies": {
+    "big.js": "^6.2.1",
     "commander": "^10.0.1",
+    "csv-parser": "^3.0.0",
     "dotenv": "^8.6.0",
     "figlet": "^1.6.0",
     "snyk": "^1.1143.0"
