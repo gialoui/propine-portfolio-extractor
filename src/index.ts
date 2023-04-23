@@ -17,7 +17,7 @@ console.log(figlet.textSync("Propine Helper"));
 program
   .version("1.0.0")
   .description("CLI application aims to compute the portfolio of crypto investor based on the input parameters")
-  .option("--dir <value>", "Directory to the log folder")
+  .option("--dir <pathToTransactionsLog>", "Directory to the log folder")
   .option("-t, --token [value]", "Given a token, return the latest portfolio value for that token in USD")
   .option("-d, --date [value]", "Given a date in mm/dd/yyyy format, return the portfolio value per token in USD on that date")
   .parse(process.argv);

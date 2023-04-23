@@ -9,3 +9,8 @@ yarn
 ```
 yarn build
 ```
+
+## After finishing the build, you can run this command to seek help
+```
+node dist/index.js --dir <pathToTransactionsLog> --help
+```
