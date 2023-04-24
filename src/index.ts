@@ -5,8 +5,8 @@ import { config } from 'dotenv';
 import * as figlet from 'figlet';
 import * as fs from "fs";
 import * as path from "path";
-import { getCurrentPrice } from './client/cryptocompare';
 import { Transaction } from './dao/transaction';
+import { calculateBalance, convertToDate, printPortfolio, printPortfolios, processCsvFile } from './service/portfolio-service';
 
 // Load environment variables from .env file
 config();
@@ -29,6 +29,7 @@ console.time('Estimated time');
 const csvFilePath = path.resolve(opts.dir, 'transactions.csv');
 let csvReadStream = fs.createReadStream(csvFilePath).pipe(csvParser());
 
+// Actions implementation goes here
 if (opts.token || opts.date) {
   if (opts.token && opts.date) {
     let finalBalance;
@@ -104,69 +105,4 @@ if (opts.token || opts.date) {
     printPortfolios(portfolios);
     console.timeEnd('Estimated time');
   });
-}
-
-/**
- * Calculates the next balance of token
- * @param currentBalance Current balance
- * @param transactionType Transaction type
- * @param amount New amount
- * @returns 
- */
-function calculateBalance(currentBalance: Big, transactionType: string, amount: Big): Big { 
-  if ('WITHDRAWAL' === transactionType) {
-    return currentBalance.minus(amount);
-  } else if ('DEPOSIT' === transactionType) {
-    return currentBalance.plus(amount);
-  }
-}
-
-/**
- * Reads CSV file and handles the logic
- * @param csvReadStream Read stream
- * @param handler Handler function
- * @param endHandler Error handler function
- */
-function processCsvFile(csvReadStream, handler: Function, endHandler: Function): void {
-  csvReadStream.on("data", handler)
-  .on('end', endHandler)
-  .on('error', (error) => {
-    console.error(`Something went wrong: ${error}`)
-  });
-}
-
-/**
- * Print out the list of portfolios
- * @param portfolios List of portfolios
- */
-function printPortfolios(portfolios: Map<string, Big>): void {
-  for (let [key, value] of portfolios) {
-    printPortfolio(key, value);
-  }
-}
-
-/**
- * Print out the portfolio
- * @param token Token name
- * @param balance The balance
- */
-async function printPortfolio(token: string, balance: Big): Promise<void> {
-  const price = await getCurrentPrice(token, 'USD');
-
-  console.log(`${token}: ${balance.toPrecision(10)}`);
-  console.log(`USD: ${balance.times(price).toPrecision(10)}`);
-  console.log('=========================');
-}
-
-/**
- * Convert timestamp to date string
- * @param timestamp Timestamp to calculate
- * @returns 
- */
-function convertToDate(timestamp: number): string {          
-  // Create a new Date object using the timestamp
-  const date = new Date(timestamp * 1000);
-  
-  // Get the date in a readable format
-  return date.toLocaleDateString("en-US");
 }
